@@ -30,16 +30,21 @@ output * bg /usr/share/backgrounds/fedora-workstation/dutch_skies.jpg fill
 output eDP-1 Geometry: 1366x768 @ 0,0
 
 # Screen brightness controls
+bindsym XF86MonBrightnessUp exec --no-startup-id light -A 5;
+bindsym XF86MonBrightnessDown exec --no-startup-id light -U 5; 
 
-bindsym XF86MonBrightnessUp exec light -A 5;
-bindsym XF86MonBrightnessDown exec light -U 5; 
 
 # Autostart apps
-# exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-output nm-applet
-output volumeicon
-output xfce4-power-manager
-output blueman-applet
+exec nm-applet
+exec volumeicon
+exec xfce4-power-manager
+exec blueman-applet
+
+
+# lock screen and suspend
+bindsym $mod+End exec --no-startup-id "i3lock -i ~/.config/i3/lock.png && systemctl suspend"
+# lock screen 
+bindsym $mod+Home exec --no-startup-id "i3lock -i ~/.config/i3/lock.png"
 
 
 #
@@ -209,6 +214,8 @@ bindsym $mod+r mode "resize"
 #
 # Read `man 5 sway-bar` for more information about this section.
 bar {
+
+    status_command i3status
     position bottom
     colors {
         statusline #ffffff
