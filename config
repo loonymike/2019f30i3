@@ -30,16 +30,16 @@ output * bg /usr/share/backgrounds/fedora-workstation/dutch_skies.jpg fill
 output eDP-1 Geometry: 1366x768 @ 0,0
 
 # Screen brightness controls
-bindsym XF86MonBrightnessUp exec --no-startup-id light -A 5;
-bindsym XF86MonBrightnessDown exec --no-startup-id light -U 5;
+bindsym XF86MonBrightnessUp exec light -A 5;
+bindsym XF86MonBrightnessDown exec light -U 5;
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-start-up pactl set-sink-volume 0 +5%
-bindsym XF86AudioLowerVolume exec --no-start-up pactl set-sink-volume 0 -5%
-bindsym XF86AudioMute exec --no-start-up pactl set-sink-mute 0 toggle
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
 
 
-# Autostart apps
+# Autostart apps (this appears to not work)
 exec nm-applet
 exec volumeicon
 exec xfce4-power-manager
