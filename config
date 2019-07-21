@@ -15,7 +15,7 @@ set $up k
 set $right l
 
 # Your preferred terminal emulator
-set $term terminator
+set $term termite
 
 # Your preferred application launcher
 set $menu rofi -show combi
@@ -27,7 +27,7 @@ output * bg /usr/share/backgrounds/fedora-workstation/dutch_skies.jpg fill
 #
 # Example configuration:   
 
-output eDP-1 Geometry: 1366x768 @ 0,0
+output eDP-1 pos 0 0 res 1366x768
 
 # Screen brightness controls
 bindsym XF86MonBrightnessUp exec light -A 5;
@@ -45,12 +45,18 @@ exec volumeicon
 exec xfce4-power-manager
 exec blueman-applet
 
+#Open applications on specific workspaces
+assign [class="Firefox"] 1
+assign [class="Thunderbird"] 2
+assign [class="Gedit"] 3
+assign [class="Nautilus"] 4
+assign [class="Code"] 5
 
-# lock screen and suspend
-bindsym $mod+End exec "i3lock -i ~/.config/i3/lock.png && systemctl suspend"
-# lock screen 
-bindsym $mod+Home exec "i3lock -i ~/.config/i3/lock.png"
+exec mako --anchor bottom-right
 
+
+# suspend
+bindsym $mod+End exec "systemctl suspend"
 
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
@@ -59,17 +65,14 @@ bindsym $mod+Home exec "i3lock -i ~/.config/i3/lock.png"
 #
 # Example configuration:
 #
-   input "2:14:SynPS/2_Synaptics_TouchPad" {
-       dwt enabled
-       tap enabled
-       natural_scroll enabled
-       middle_emulation enabled
+   input "1739:0:Synaptics_TM3075-002" {
+      tap enabled
+      natural_scroll enabled
+      dwt enabled
   }
 
-   input "1:1:AT_Translated_Set_2_keyboard {
-    xkb_layout us,de
-    xkb_variant ,nodeadkeys
-    xkb_options grp:alt_shift_toggle
+   input "1:1:AT_Translated_Set_2_keyboard" {
+    xkb_layout us
 }
 
 #
@@ -89,6 +92,7 @@ bindsym $mod+Home exec "i3lock -i ~/.config/i3/lock.png"
     # start your launcher
     bindsym $mod+d exec $menu
 
+
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.
@@ -97,7 +101,7 @@ bindsym $mod+Home exec "i3lock -i ~/.config/i3/lock.png"
     floating_modifier $mod normal
 
     # reload the configuration file
-    bindsym $mod+Shift+c reload
+    # bindsym $mod+Shift+c reload
 
     # exit sway (logs you out of your wayland session)
     bindsym $mod+Shift+e exit
