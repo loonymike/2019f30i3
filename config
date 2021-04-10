@@ -14,66 +14,94 @@ set $down j
 set $up k
 set $right l
 
+# Font  # pango:Sans
+font Hack 12
+
 # Your preferred terminal emulator
-set $term termite
+set $term alacritty
+
 
 # Your preferred application launcher
-set $menu rofi -show combi
+# Note: it's recommended that you pass the final command to sway
+
+# set $menu dmenu_path | dmenu | xargs swaymsg exec --
+# set $menu 'rofi -modi run, drun, window, combi, -show drun'
+# set $menu 'rofi -combi-modi window,drun -show combi -modi combi'
+set $menu 'rofi -show run'
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/fedora-workstation/dutch_skies.jpg fill
-#
-# Example configuration:   
+# output * bg /usr/share/backgrounds/f31/default/normalish/f31.png fill
 
-output eDP-1 pos 0 0 res 1366x768
-
-# Screen brightness controls
-bindsym XF86MonBrightnessUp exec light -A 5;
-bindsym XF86MonBrightnessDown exec light -U 5;
-
-# Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5%
-bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
-
-
-# Autostart apps (this appears to not work)
-exec nm-applet
-exec volumeicon
-exec xfce4-power-manager
-exec blueman-applet
-
-#Open applications on specific workspaces
-assign [class="Firefox"] 1
-assign [class="Thunderbird"] 2
-assign [class="Gedit"] 3
-assign [class="Nautilus"] 4
-assign [class="Code"] 5
-
-exec mako --anchor bottom-right
-
-
-# suspend
-bindsym $mod+End exec "systemctl suspend"
+output * bg ~/Downloads/green.jpg fill
 
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
+output eDP-1 resolution 1920x1080 position 0,0
+
+### Idle configuration
+
+set $lock_bg ~/Downloads/night.jpg fill
+
+bindsym $mod+Shift+x exec swaylock -i $lock_bg
+
+exec swayidle -w \
+        timeout 300 'swaylock -f -c 000000 -i $lock_bg' \
+        timeout 600 'swaymsg "output * dpms off"' \
+             resume 'swaymsg "output * dpms on"' \
+         before-sleep 'swaylock -f -c 000000 -i $lock_bg'
+
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
 ### Input configuration
 #
-# Example configuration:
 #
-   input "1739:0:Synaptics_TM3075-002" {
-      tap enabled
-      natural_scroll enabled
-      dwt enabled
+  input "1739:30381:DLL0704:01_06CB:76AD_Touchpad" {
+        tap enabled
+        natural_scroll enabled
+        pointer_accel 0.1
+        accel_profile adaptive
+
   }
 
-   input "1:1:AT_Translated_Set_2_keyboard" {
-    xkb_layout us
-}
+  input "1:1:AT_Translated_Set_2_keyboard" {
+        xkb_layout us
+  }
+
+### Screen brightness
+
+bindsym XF86MonBrightnessUp exec light -A 5
+bindsym XF86MonBrightnessDown exec light -U 5
+
+### AudioQ
+
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
+
+### Notifications
+
+# exec mako --anchor bottom-right
+
+### Apps
+
+bindsym $mod+F1 exec google-chrome
+bindsym $mod+F2 exec firefox
+bindsym $mod+F3 exec subl
+bindsym $mod+F4 exec microsoft-edge
+bindsym $mod+F5 exec code
+
+### ASSIGN
+
+# assign [class="Firefox"] 2
+# assign [class="Sublime"] 3
+# assign [class="Code"] 5
+# assign [class=Spyder] 6
+
 
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
@@ -92,7 +120,6 @@ bindsym $mod+End exec "systemctl suspend"
     # start your launcher
     bindsym $mod+d exec $menu
 
-
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.
@@ -101,10 +128,11 @@ bindsym $mod+End exec "systemctl suspend"
     floating_modifier $mod normal
 
     # reload the configuration file
-    # bindsym $mod+Shift+c reload
+    bindsym $mod+Shift+c reload
 
-    # exit sway (logs you out of your wayland session)
-    bindsym $mod+Shift+e exit
+    # exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+
 #
 # Moving around:
 #
@@ -132,6 +160,18 @@ bindsym $mod+End exec "systemctl suspend"
 #
 # Workspaces:
 #
+
+     set $1 "1"
+     set $2 "2"
+     set $3 "3"
+     set $4 "4"
+     set $5 "5"
+     set $6 "6"
+     set $7 "7"
+     set $8 "8"
+     set $9 "9"
+     set $10 "10"
+
     # switch to workspace
     bindsym $mod+1 workspace 1
     bindsym $mod+2 workspace 2
@@ -156,6 +196,7 @@ bindsym $mod+End exec "systemctl suspend"
     bindsym $mod+Shift+0 move container to workspace 10
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
+
 #
 # Layout stuff:
 #
@@ -201,16 +242,16 @@ mode "resize" {
     # right will grow the containers width
     # up will shrink the containers height
     # down will grow the containers height
-    bindsym $left resize shrink width 10 px or 10 ppt
-    bindsym $down resize grow height 10 px or 10 ppt
-    bindsym $up resize shrink height 10 px or 10 ppt
-    bindsym $right resize grow width 10 px or 10 ppt
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
 
     # ditto, with arrow keys
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
 
     # return to default mode
     bindsym Return mode "default"
@@ -222,15 +263,20 @@ bindsym $mod+r mode "resize"
 # Status Bar:
 #
 # Read `man 5 sway-bar` for more information about this section.
+#
 bar {
 
-    status_command i3status
-    position bottom
-    colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
-    }
-}
+    # When the status_command prints a new line to stdout, swaybar updates.
+    # The default just shows the current date and time.
+    # status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
+    # status_command waybar
+    # swaybar_command waybar
 
-include /etc/sway/config.d/*
+    position top
+
+    status_command ~/bumblebee-status/bumblebee-status \
+        -m load amixer brightness nic battery-upower date time \
+        -p brightness.interval=1s time.format="%H:%M" date.format="%a, %b %d" \
+        -t powerline \
+
+        }
