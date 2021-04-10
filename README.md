@@ -1,3 +1,3 @@
 # 2019f30i3
-fedora 30 workstation from i3 to Sway
-this is on a Thinkpad x250
+fedora 33 workstation Sway
+Dell XPS 13 9350
